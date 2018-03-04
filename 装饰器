@@ -1,0 +1,15 @@
+ef use_logging(func):
+
+    def wrapper(*args, **kwargs):                      //若foo（）有参数
+        logging.warn("%s is running" % func.__name__)
+        return func(*args, **kwargs)
+    return wrapper
+
+@use_logging
+def foo():
+    print("i am foo")
+
+foo()
+
+
+
