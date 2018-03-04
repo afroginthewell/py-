@@ -1,0 +1,50 @@
+
+似乎for就是不断调用next
+enerator在每次调用next()的时候执行，遇到yield语句返回，再次执行时从上次返回的yield语句处继续执行
+
+def fibonacci():
+...   a = b = 1
+...   yield a
+...   yield b
+...   while True:
+...     a, b = b, a+b
+...     yield b                //在此返回后，再次执行则到while
+...
+>>> for num in fibonacci():
+...   if num > 100: break
+...   print num,
+
+
+
+
+
+
+
+
+
+def count():
+    fs = []
+    for i in range(1, 4):
+        def f():
+             return i*i
+        fs.append(f)
+    return fs
+
+f1, f2, f3 = count()
+
+f1()，f2()和f3()结果全是9
+返回函数不要引用任何循环变量，或者后续会发生变化的变量。
+
+如果一定要引用循环变量怎么办？方法是再创建一个函数，用该函数的参数绑定循环变量当前的值，无论该循环变量后续如何更改，已绑定到要返回的函数的参数不变
+我觉得 可能是函数在返回时才会定下其中参数的值
+
+
+def count():
+    def f(j):
+        def g():
+            return j*j
+        return g
+    fs = []
+    for i in range(1, 4):
+        fs.append(f(i)) 
+    return fs
